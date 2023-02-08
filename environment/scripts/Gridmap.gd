@@ -263,25 +263,48 @@ func place_path(path):
 				x_flip = false
 				y_flip = false
 				transposed = true
+				if cur != -1:
+					var res = handle_layer(path[i], new_tile, x_flip, y_flip, transposed)
+					new_tile = res[0] 
+					x_flip = res[1] 
+					y_flip = res[2]
+					transposed = res[3]
 			# prev: right	next: down	want: nw corner
 			elif comp_vec(prev_vec, next_vec, Vector2.RIGHT, Vector2.DOWN):
 				new_tile = tn("hall_corner")
-				# new_tile = -1
 				x_flip = true
 				y_flip = false
 				transposed = true
+				if cur != -1:
+					var res = handle_layer(path[i], new_tile, x_flip, y_flip, transposed)
+					new_tile = res[0] 
+					x_flip = res[1] 
+					y_flip = res[2]
+					transposed = res[3]
 			# prev: left	next: up	want: se corner
 			elif comp_vec(prev_vec, next_vec, Vector2.LEFT, Vector2.UP):
 				new_tile = tn("hall_corner")
 				x_flip = false
 				y_flip = true
 				transposed = true
+				if cur != -1:
+					var res = handle_layer(path[i], new_tile, x_flip, y_flip, transposed)
+					new_tile = res[0] 
+					x_flip = res[1] 
+					y_flip = res[2]
+					transposed = res[3]
 			# prev: right	next: up	want: sw corner
 			elif comp_vec(prev_vec, next_vec, Vector2.RIGHT, Vector2.UP):
 				new_tile = tn("hall_corner")
 				x_flip = true
 				y_flip = true
 				transposed = true
+				if cur != -1:
+					var res = handle_layer(path[i], new_tile, x_flip, y_flip, transposed)
+					new_tile = res[0] 
+					x_flip = res[1] 
+					y_flip = res[2]
+					transposed = res[3]
 			# prev: up		next: down	want: hall vert
 			# prev: down	next: up	want: hall vert
 			elif comp_vec(prev_vec, next_vec, Vector2.UP, Vector2.DOWN):
@@ -289,6 +312,12 @@ func place_path(path):
 				x_flip = false
 				y_flip = false
 				transposed = false
+				if cur != -1:
+					var res = handle_layer(path[i], new_tile, x_flip, y_flip, transposed)
+					new_tile = res[0] 
+					x_flip = res[1] 
+					y_flip = res[2]
+					transposed = res[3]
 			# prev: left	next: right	want: hall horiz
 			# prev: right	next: left	want: hall horiz
 			elif comp_vec(prev_vec, next_vec, Vector2.LEFT, Vector2.RIGHT):
@@ -296,6 +325,12 @@ func place_path(path):
 				x_flip = false
 				y_flip = false
 				transposed = true
+				if cur != -1:
+					var res = handle_layer(path[i], new_tile, x_flip, y_flip, transposed)
+					new_tile = res[0] 
+					x_flip = res[1] 
+					y_flip = res[2]
+					transposed = res[3]
 
 			else:
 				print("UNMATCHED:")
@@ -313,47 +348,6 @@ func place_path(path):
 				transposed
 			)
 
-	return
-		# if cur == tn("w_n"):
-		# 	# tilemap.set_cellv(j, tn("wd_n"))
-		# 	prev_vec = Vector2.UP
-		# elif cur == tn("w_s"):
-		# 	# tilemap.set_cellv(j, tn("wd_s"))
-		# 	prev_vec = Vector2.DOWN
-		# elif cur == tn("w_e"):
-		# 	# tilemap.set_cellv(j, tn("wd_e"))
-		# 	prev_vec = Vector2.RIGHT
-		# elif cur == tn("w_w"):
-		# 	tilemap.set_cellv(j, tn("wd_w"))
-		# 	prev_vec = Vector2.LEFT
-	
-	# var i = 0
-	# while i < len(path):		
-	# 	if set_vec:
-	# 		prev_vec = set_vec
-
-	# 	set_vec = path[i] - path[i-1]
-
-	# 	if ((prev_vec == Vector2.UP and set_vec == Vector2.UP) or
-	# 		(prev_vec == Vector2.DOWN and set_vec == Vector2.DOWN)):
-	# 		tilemap.set_cellv(path[i-1], tn("h_v"))
-	# 	elif ((prev_vec == Vector2.LEFT and set_vec == Vector2.LEFT) or
-	# 		(prev_vec == Vector2.RIGHT and set_vec == Vector2.RIGHT)):
-	# 		tilemap.set_cellv(path[i-1], tn("h_h"))
-	# 	elif ((prev_vec == Vector2.LEFT and set_vec == Vector2.UP) or
-	# 		(prev_vec == Vector2.DOWN and set_vec == Vector2.RIGHT)):
-	# 		tilemap.set_cellv(path[i-1], tn("hc_sw"))
-	# 	elif ((prev_vec == Vector2.RIGHT and set_vec == Vector2.UP) or
-	# 		(prev_vec == Vector2.DOWN and set_vec == Vector2.LEFT)):
-	# 		tilemap.set_cellv(path[i-1], tn("hc_se"))
-	# 	elif ((prev_vec == Vector2.LEFT and set_vec == Vector2.DOWN) or
-	# 		(prev_vec == Vector2.UP and set_vec == Vector2.RIGHT)):
-	# 		tilemap.set_cellv(path[i-1], tn("hc_nw"))
-	# 	elif ((prev_vec == Vector2.RIGHT and set_vec == Vector2.DOWN) or
-	# 		(prev_vec == Vector2.UP and set_vec == Vector2.LEFT)):
-	# 		tilemap.set_cellv(path[i-1], tn("hc_ne"))
-		
-	# 	i += 1
 
 func comp_vec(v1a, v1b, v2a, v2b):
 	if v1a == v2a and v1b == v2b:
@@ -361,6 +355,120 @@ func comp_vec(v1a, v1b, v2a, v2b):
 	if v1a == v2b and v2a == v1b:
 		return true
 	return false
+
+
+func handle_layer(cur_loc, attempted_tile, x_flip, y_flip, transposed):
+	# function to handle the layering of cells
+	var new_tile = null
+
+	var cur_tile = tilemap.get_cellv(cur_loc)
+	var cur_x_flip = tilemap.is_cell_x_flipped(cur_loc.x, cur_loc.y)
+	var cur_y_flip = tilemap.is_cell_y_flipped(cur_loc.x, cur_loc.y)
+	var cur_transposed = tilemap.is_cell_transposed(cur_loc.x, cur_loc.y)
+
+	# if the current tile is a 4 way, it's always a 4 way
+	if cur_tile == tn("hall_quad"):
+		new_tile = tn("hall_quad")
+		x_flip = false
+		y_flip = false
+		transposed = false
+
+	# make hall_quad from composits
+	elif (
+		# h_v, h_h
+		(comp_vec(cur_tile, attempted_tile, tn("hall"), tn("hall")) and
+			cur_transposed != transposed) or
+		# se, nw; sw, ne
+		(comp_vec(cur_tile, attempted_tile, tn("hall_corner"), tn("hall_corner")) and
+			cur_x_flip != x_flip and
+			cur_y_flip != y_flip) or
+		# tri_north/tri_south and h_v; tri_east/tri_west and h_h
+		(comp_vec(cur_tile, attempted_tile, tn("hall_tri"), tn("hall")) and
+			cur_transposed == transposed)
+	):
+		new_tile = tn("hall_quad")
+		x_flip = false
+		y_flip = false
+		transposed = false
+	
+	# make hall_tri facing north
+	elif (
+		# se, sw
+		(comp_vec(cur_tile, attempted_tile, tn("hall_corner"), tn("hall_corner")) and
+			cur_x_flip != x_flip and
+			cur_y_flip == y_flip and
+			y_flip == true) or
+		# se, h_h; sw, h_h
+		(comp_vec(cur_tile, attempted_tile, tn("hall_corner"), tn("hall")) and
+			cur_y_flip == y_flip and
+			y_flip == true and
+			cur_transposed == transposed)
+	):
+		new_tile = tn("hall_tri")
+		x_flip = false
+		y_flip = false
+		transposed = false
+	
+	# make hall_tri facing south
+	elif (
+		# ne, nw
+		(comp_vec(cur_tile, attempted_tile, tn("hall_corner"), tn("hall_corner")) and
+			cur_x_flip != x_flip and
+			cur_y_flip == y_flip and
+			y_flip == false) or
+		# ne, h_h; nw, h_h
+		(comp_vec(cur_tile, attempted_tile, tn("hall_corner"), tn("hall")) and
+			cur_y_flip != y_flip and
+			cur_transposed == transposed)
+	):
+		new_tile = tn("hall_tri")
+		x_flip = false
+		y_flip = true
+		transposed = false
+
+	# make hall_tri facing east
+	elif (
+		# nw, sw
+		(comp_vec(cur_tile, attempted_tile, tn("hall_corner"), tn("hall_corner")) and
+			cur_x_flip == x_flip and
+			x_flip == true and
+			cur_y_flip != y_flip) or
+		# nw, h_v; sw, h_v
+		(comp_vec(cur_tile, attempted_tile, tn("hall_corner"), tn("hall")) and
+			cur_x_flip != x_flip and
+			cur_transposed != transposed)
+	):
+		new_tile = tn("hall_tri")
+		x_flip = false
+		y_flip = false
+		transposed = true
+
+	# make hall_tri facing west
+	elif (
+		# ne, se
+		(comp_vec(cur_tile, attempted_tile, tn("hall_corner"), tn("hall_corner")) and
+			cur_x_flip == x_flip and
+			x_flip == false and
+			cur_y_flip != y_flip) or
+		# ne, h_v; se, h_v
+		(comp_vec(cur_tile, attempted_tile, tn("hall_corner"), tn("hall")) and
+			cur_x_flip == x_flip and
+			cur_transposed != transposed)
+	):
+		new_tile = tn("hall_tri")
+		x_flip = true
+		y_flip = false
+		transposed = true
+
+	elif (cur_tile == attempted_tile and
+		cur_x_flip == x_flip and
+		cur_y_flip == y_flip and
+		cur_transposed == transposed
+	):
+		new_tile = cur_tile
+
+
+	return [new_tile, x_flip, y_flip, transposed]
 
 
 func place_path_autotile(path):
