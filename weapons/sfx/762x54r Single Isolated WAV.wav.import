@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/762x54r Single Isolated WAV.wav-6439d0801dc0b46644a241c6b7d93cbe.sample"
+
+[deps]
+
+source_file="res://weapons/sfx/762x54r Single Isolated WAV.wav"
+dest_files=[ "res://.import/762x54r Single Isolated WAV.wav-6439d0801dc0b46644a241c6b7d93cbe.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

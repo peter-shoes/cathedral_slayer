@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://environment/mapgen/single_tilemap2.tres" type="TileSet" id=1]
+[ext_resource path="res://environment/scripts/Gridmap.gd" type="Script" id=2]
+
+[node name="Gridmap" type="Node2D"]
+scale = Vector2( 2, 2 )
+script = ExtResource( 2 )
+nr = 5
+fx = 12
+fy = 12
+rx = 4
+ry = 4
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = ExtResource( 1 )
+cell_size = Vector2( 8, 8 )
+cell_tile_origin = 2
+format = 1

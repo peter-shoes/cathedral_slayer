@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/m45.wav-49e5bbeb0622f9f0ae81dd63a5c00493.sample"
+
+[deps]
+
+source_file="res://weapons/sfx/m45.wav"
+dest_files=[ "res://.import/m45.wav-49e5bbeb0622f9f0ae81dd63a5c00493.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=true
+edit/loop=false
+compress/mode=0
