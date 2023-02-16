@@ -2,7 +2,7 @@
 
 [ext_resource path="res://characters/player/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://environment/mapgen/Gridmap.tscn" type="PackedScene" id=2]
-[ext_resource path="res://environment/mapgen/aelid_tile.tres" type="MeshLibrary" id=3]
+[ext_resource path="res://sewer/sewer_tilemap_notex.tres" type="MeshLibrary" id=3]
 [ext_resource path="res://environment/scripts/DungeonGenerator.gd" type="Script" id=4]
 [ext_resource path="res://World.gd" type="Script" id=5]
 
@@ -19,40 +19,22 @@ script = ExtResource( 4 )
 [node name="NavigationMeshInstance" type="NavigationMeshInstance" parent="DungeonGenerator/Navigation"]
 
 [node name="DungeonGrid" type="GridMap" parent="DungeonGenerator"]
-transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0 )
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 )
 mesh_library = ExtResource( 3 )
+cell_size = Vector3( 4, 0.01, 4 )
+cell_octant_size = 16
+cell_scale = 100.0
 data = {
 "cells": PoolIntArray(  )
 }
 __meta__ = {
-"_editor_clip_": 0
-}
-
-[node name="DungeonGrid2" type="GridMap" parent="DungeonGenerator"]
-transform = Transform( 8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 0 )
-mesh_library = ExtResource( 3 )
-data = {
-"cells": PoolIntArray(  )
-}
-__meta__ = {
-"_editor_clip_": 0
-}
-
-[node name="DungeonGrid3" type="GridMap" parent="DungeonGenerator"]
-transform = Transform( 8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 0 )
-mesh_library = ExtResource( 3 )
-data = {
-"cells": PoolIntArray(  )
-}
-__meta__ = {
-"_editor_clip_": 0
+"_editor_clip_": 0,
+"_editor_floor_": Vector3( 0, 0, 0 )
 }
 
 [node name="Gridmap" parent="DungeonGenerator" instance=ExtResource( 2 )]
 visible = false
-nr = 4
-fx = 16
-fy = 16
+nr = 6
 
 [node name="FloorMesh" type="MeshInstance" parent="DungeonGenerator"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0 )

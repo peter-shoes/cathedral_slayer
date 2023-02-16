@@ -12,8 +12,10 @@ transform = Transform( 0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0 )
 material/0 = ExtResource( 2 )
 
 [node name="OmniLight" type="OmniLight" parent="."]
-light_color = Color( 1, 0.898039, 0.631373, 1 )
-light_energy = 5.0
+light_color = Color( 0.356863, 1, 0.760784, 1 )
+light_energy = 3.0
+light_specular = 1.0
+light_bake_mode = 2
 omni_range = 25.0
 
 [editable path="lantern"]

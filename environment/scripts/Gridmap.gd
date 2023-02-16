@@ -10,8 +10,8 @@ export var nf: int = 1
 
 export var nr: int = 4
 
-export var fx: int = 16
-export var fy: int = 16
+export var fx: int = 32
+export var fy: int = 32
 var fs: Vector2
 
 export var rx: int = 3
@@ -59,20 +59,23 @@ func _ready():
 	fs = Vector2(fx, fy)
 	rs = Vector2(rx, ry)
 	astar.reserve_space(fs.x*fs.y)
-	tilemap.clear()
+	
 	#tilemap = TileMap.new()
 	#tilemap.tile_set = autotile
+	# seed(6)
 	tilemap.tile_set = tileset
-	#seed(3)
 	randomize()
 	generate()
 
 
 func generate():
-	# place rooms (vectors)
-	rooms = calc_rooms()
-	# calculate mst of complete graph
-	var edges = boruvka.calc_mst_boruvka(rooms)
+	var edges = false
+	while !edges:
+		tilemap.clear()
+		# place rooms (vectors)
+		rooms = calc_rooms()
+		# calculate mst of complete graph
+		edges = boruvka.calc_mst_boruvka(rooms)
 	# do internal astar pathing
 	var paths = internal_astar(edges)
 	# place paths
@@ -204,41 +207,35 @@ func place_path(path):
 		
 		elif cur == tn("corner"):
 			#check the next cell for orientation
+			new_tile = tn("corner_door_l")
 			if (i+1 < len(path)):
 				if path[i+1].y!= path[i].y:
-					new_tile = tn("corner_door_l")
+					pass
 				else:
-					new_tile = tn("corner_door_r")
+					transposed = !transposed
+					y_flip = !y_flip
+					x_flip = !x_flip
 			else:
 				if path[i-1].y!= path[i].y:
-					new_tile = tn("corner_door_l")
+					pass
 				else:
-					new_tile = tn("corner_door_r")		
+					transposed = !transposed
+					y_flip = !y_flip
+					x_flip = !x_flip
 		
 		
 		elif cur == tn("corner_door_l"):
-			if (i+1 < len(path)):
-				if (path[i+1].y != path[i].y):
-					new_tile = tn("corner_door_l")
-				else:
-					new_tile = tn("corner_door")
-			else:
-				if (path[i-1].y != path[i].y):
-					new_tile = tn("corner_door_l")
-				else:
-					new_tile = tn("corner_door")
-		
-		elif cur == tn("corner_door_r"):
-			if (i+1 < len(path)):
-				if (path[i+1].y == path[i].y):
-					new_tile = tn("corner_door_r")
-				else:
-					new_tile = tn("corner_door")
-			else:
-				if (path[i-1].y == path[i].y):
-					new_tile = tn("corner_door_r")
-				else:
-					new_tile = tn("corner_door")
+			new_tile = tn("corner_door")
+			# if (i+1 < len(path)):
+			# 	if (path[i+1].y != path[i].y):
+			# 		new_tile = tn("corner_door_l")
+			# 	else:
+			# 		new_tile = tn("corner_door")
+			# else:
+			# 	if (path[i-1].y != path[i].y):
+			# 		new_tile = tn("corner_door_l")
+			# 	else:
+			# 		new_tile = tn("corner_door")
 
 		elif cur == tn("door"):
 			new_tile = tn("door")
@@ -343,6 +340,14 @@ func place_path(path):
 			tilemap.set_cellv(
 				path[i],
 				new_tile,
+				x_flip,
+				y_flip,
+				transposed
+			)
+		if new_tile == tn("corner_door"):
+			tilemap.set_cellv(
+				path[i],
+				0,
 				x_flip,
 				y_flip,
 				transposed

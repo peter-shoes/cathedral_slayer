@@ -152,6 +152,9 @@ func calc_mst_boruvka(rooms: Array):
 			open_edges.erase(components[i])
 		print(len(closed_edges), " ", len(open_edges))
 
+		if len(closed_edges) >= 1+len(components):
+			return false
+
 		# check if completed
 		components = {}
 		count = 0
@@ -171,5 +174,9 @@ func calc_mst_boruvka(rooms: Array):
 	# 	open_edges.erase(open_edges[i])
 
 	# returns a list of edges
-	return closed_edges
+	var clean_edges = []
+	for i in closed_edges:
+		if !clean_edges.has(i):
+			clean_edges.append(i)
+	return clean_edges
 

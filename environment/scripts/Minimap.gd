@@ -23,7 +23,6 @@ func _ready():
 	cam.size = 100
 	vp.add_child(cam)
 	#vp.add_child()
-	pass # Replace with function body.
 
 func _process(delta):
 	cam.translation = Vector3(target.translation.x, 20, target.translation.z)

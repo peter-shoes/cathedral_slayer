@@ -6,9 +6,7 @@
 [node name="Gridmap" type="Node2D"]
 scale = Vector2( 2, 2 )
 script = ExtResource( 2 )
-nr = 5
-fx = 12
-fy = 12
+nr = 7
 rx = 4
 ry = 4
 

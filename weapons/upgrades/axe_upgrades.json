@@ -1,0 +1,10 @@
+{
+	"upgrades": [
+		{
+			"name":"sample_name_1",
+			"desc":"sample_desc_1",
+			"res":"resource_img_1.png",
+			"obtained":false
+		}
+	]
+}

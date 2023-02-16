@@ -21,7 +21,7 @@ _global_script_class_icons={
 [application]
 
 config/name="cathedral_slayer"
-run/main_scene="res://environment/mapgen/Gridmap.tscn"
+run/main_scene="res://World.tscn"
 boot_splash/image="res://splash.png"
 
 [display]
@@ -29,6 +29,7 @@ boot_splash/image="res://splash.png"
 window/size/width=1000
 window/size/height=562
 window/size/resizable=false
+window/size/fullscreen=true
 window/stretch/mode="viewport"
 
 [input]

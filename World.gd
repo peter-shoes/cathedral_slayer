@@ -15,12 +15,12 @@ onready var minimap = load("res://environment/Minimap.tscn")
 func _ready():
 	var trans = dungeon_grid.map_to_world(dungeon.start_loc.x, dungeon.start_loc.y, dungeon.start_loc.z)
 	player.translation = trans*dungeon_grid.scale.x
-	print(player.translation)
 	set_minimap()
 
 func set_minimap():
 	var mm = minimap.instance()
 	mm.target = player
-	# minimap.set_world_2d(dungeon.tilemap)
+	# player.camera.add_child(dungeon.tilemap)
 	player.camera.add_child(mm)
+
 
