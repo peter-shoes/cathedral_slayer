@@ -31,8 +31,6 @@ func _ready():
 	attack_timer.one_shot = true
 	add_child(attack_timer)
 	
-	anim_player.get_animation("walk").set_loop(true)
-	anim_player.get_animation("idle").set_loop(true)
 	player = get_tree().get_nodes_in_group("player")[0]
 	var bone_attachments = $Graphics/Armature/Skeleton.get_children()
 	for bone_attachment in bone_attachments:

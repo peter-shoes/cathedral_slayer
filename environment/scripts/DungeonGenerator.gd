@@ -8,6 +8,7 @@ onready var navigation = $Navigation
 onready var navmesh = $Navigation/NavigationMeshInstance
 onready var lantern = load("res://environment/Lantern.tscn")
 onready var metlar = load("res://characters/enemies/Metlar.tscn")
+onready var plant = load("res://environment/plants/Plant.tscn")
 onready var floor_mesh = $FloorMesh
 
 onready var found_start = false
@@ -29,12 +30,11 @@ func generate():
 			var loc2 = Vector2(i,j)
 			var cur_tile = tilemap.get_cellv(loc2)
 			place_tile(cur_tile, loc)
-			# if cur_tile != -1:
-			# 	add_child(lantern.instance())
-			# 	var li = get_children()[-1]
-			# 	var trans = dungeon_grid.map_to_world(loc2.x, dungeon_grid.cell_size.x*dungeon_grid.cell_scale, loc2.y)
-			# 	# trans.y *= 1.5
-			# 	li.translation = trans * dungeon_grid.scale.x
+			if cur_tile != -1:
+				for k in range(5):
+					add_child(plant.instance())
+					place_in_world(get_children()[-1], i, z_level+4, j, true)
+				
 
 	# var used_rect = generator.tilemap.get_used_rect()
 
@@ -120,9 +120,9 @@ func place_tile(type: int, loc: Vector3):
 	elif type == generator.tn("hall_corner"):
 		tile = tn("hall_corner2")
 
-	# #hall tris
-	# elif type == generator.tn("hall_tri"):
-	# 	tile = tn("hall_tri2")
+	#hall tris
+	elif type == generator.tn("hall_tri"):
+		tile = tn("hall_tri2")
 	
 	#hall quads
 	elif type == generator.tn("hall_quad"):
@@ -225,3 +225,19 @@ func get_cell_rotation(xf, yf, tp, tile):
 	
 func tn(n: String):
 	return dungeon_grid.mesh_library.find_item_by_name(n)
+
+func place_in_world(object, x, y, z, random_offset = false):
+	if random_offset:
+		var offset = Vector3(
+			rand_range(-0.5, 0.5),
+			0,
+			rand_range(-0.5, 0.5)) * dungeon_grid.scale.x * dungeon_grid.cell_size.x
+		object.translation = dungeon_grid.map_to_world(
+			x,
+			y, 
+			z) * dungeon_grid.scale.x + offset
+	else:
+		object.translation = dungeon_grid.map_to_world(
+			x,
+			y, 
+			z) * dungeon_grid.scale.x

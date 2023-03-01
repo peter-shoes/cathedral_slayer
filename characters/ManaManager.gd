@@ -1,14 +1,10 @@
 extends Spatial
 
-signal dead
-signal hurt
 signal mana_restored
 signal mana_changed
 
 export var max_mana = 100
 var cur_mana = 1
-
-var gib_at = -10
 
 func _ready():
 	init() #making sure the init is called on the ready, this doesn't hurt because this specific init can be called twice

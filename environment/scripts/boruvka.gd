@@ -118,7 +118,7 @@ func calc_mst_boruvka(rooms: Array):
 				if j.vs[0].cid == i or j.vs[1].cid == i:
 					if !components[i] or components[i].weight > j.weight:
 						components[i] = j
-		print(len(components))
+		#print(len(components))
 		
 		# consolidate connected components
 		for i in components:
@@ -146,11 +146,11 @@ func calc_mst_boruvka(rooms: Array):
 					# switch the cid of all components whose cid matches the second cid to the first cid
 					j.vs[1].cid = master_cid
 		
-		print(len(closed_edges), " ", len(open_edges))
+		#print(len(closed_edges), " ", len(open_edges))
 		for i in components:
 			closed_edges.append(components[i])
 			open_edges.erase(components[i])
-		print(len(closed_edges), " ", len(open_edges))
+		#print(len(closed_edges), " ", len(open_edges))
 
 		if len(closed_edges) >= 1+len(components):
 			return false

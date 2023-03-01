@@ -1,10 +1,8 @@
 extends Spatial
 
-enum WEAPON_SLOTS {MACHETE, GUSTAV_GUN, BLASTER}
+enum WEAPON_SLOTS {MACHETE}
 var slots_unlocked = {
 	WEAPON_SLOTS.MACHETE: true,
-	WEAPON_SLOTS.GUSTAV_GUN: true,
-	WEAPON_SLOTS.BLASTER: true,
 } #this is gd dict formatting
 
 onready var weapons = $Weapons.get_children()
@@ -28,8 +26,8 @@ func init(_fire_point: Spatial, _bodies_to_exclude: Array):
 			weapon.init(_fire_point, _bodies_to_exclude) #initialize all weapons
 	
 	#repeat this for all weapon alerts except melee
-	weapons[WEAPON_SLOTS.BLASTER].connect("fired", self, "alert_nearby_enemies")
-	weapons[WEAPON_SLOTS.GUSTAV_GUN].connect("fired", self, "alert_nearby_enemies")
+	#weapons[WEAPON_SLOTS.BLASTER].connect("fired", self, "alert_nearby_enemies")
+	#weapons[WEAPON_SLOTS.GUSTAV_GUN].connect("fired", self, "alert_nearby_enemies")
 	
 	switch_to_weapon_slot(WEAPON_SLOTS.MACHETE)#only works with an always true weapon like the machete
 	
@@ -37,6 +35,9 @@ func attack(attack_input_just_pressed: bool, attack_input_held: bool): #from wea
 	if cur_weapon.has_method("attack"): #just in case so it doesn't crash if the weapon has no attack method
 		cur_weapon.attack(attack_input_just_pressed, attack_input_held)
 
+func cast(attack_input_just_pressed: bool, attack_input_held: bool):
+	weapons[-1].attack(attack_input_just_pressed, attack_input_held)
+	
 func drop_gas(input_just_pressed: bool):
 	# there should be some check here to see if you have any gas bombs
 	if input_just_pressed:

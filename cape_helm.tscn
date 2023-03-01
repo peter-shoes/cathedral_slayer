@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://characters/enemies/Beast.gd" type="Script" id=1]
+[ext_resource path="res://characters/enemies/raw_assets/cape/cape_helm.glb" type="PackedScene" id=2]
+
+[node name="cape_helm" instance=ExtResource( 2 )]
+script = ExtResource( 1 )

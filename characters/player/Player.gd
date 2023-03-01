@@ -16,12 +16,20 @@ var hotkeys = {
 export var mouse_sens = 0.5 
 # export var means that the variable will be adjustable in the editor menu
 
-onready var camera = $Camera 
+#onready var camera = $ViewportContainer/Viewport/Camera
+onready var camera = $Camera
 onready var character_mover = $CharacterMover
 onready var health_manager = $HealthManager
+#onready var weapon_manager = $ViewportContainer/Viewport/Camera/WeaponManager
 onready var weapon_manager = $Camera/WeaponManager
 #onready is used to reference a child of the node that this script extends so the engine will wait until that node is loaded in
 # the $ is used to reference the node, by giving the name of the node
+
+# foot sounds
+onready var foot = $Foot
+var step_timer: Timer
+var can_play = true
+
 var dead = false
 
 func _ready(): #ready is called when the scene is ready
@@ -29,7 +37,15 @@ func _ready(): #ready is called when the scene is ready
 	character_mover.init(self) #initialize the character mover and send it self (KinematicBody)
 	health_manager.init()
 	health_manager.connect("dead", self, "kill") #connects dead variable to kill func i guess
+	#weapon_manager.init($ViewportContainer/Viewport/Camera/FirePoint, [self]) #init weapon manager with firepoint node and bodies 2 exclude
 	weapon_manager.init($Camera/FirePoint, [self]) #init weapon manager with firepoint node and bodies 2 exclude
+	
+	# foot stuff
+	step_timer = Timer.new()
+	step_timer.wait_time = 0.5
+	step_timer.connect("timeout", self, "finish_step")
+	step_timer.one_shot = true
+	add_child(step_timer)
 	
 func _process(_delta):
 	if Input.is_action_just_pressed("exit"):
@@ -55,13 +71,20 @@ func _process(_delta):
 	character_mover.set_move_vec(move_vec)
 	if Input.is_action_just_pressed("jump"):
 		character_mover.jump()
+	# foot stuff
+	if move_vec != Vector3():
+		step_sound()
 	#character_mover.slide(Input.is_action_pressed("slide"))
 		
 	weapon_manager.attack(
 		Input.is_action_just_pressed("attack"),
 		Input.is_action_pressed("attack")
 		)
-	weapon_manager.drop_gas(Input.is_action_just_pressed("drop_gas"))
+	weapon_manager.cast(
+		Input.is_action_just_pressed("ability"),
+		Input.is_action_pressed("ability")
+		)
+	#weapon_manager.drop_gas(Input.is_action_just_pressed("drop_gas"))
 	
 func _input(event):
 	# event is basically any event that the computer senses
@@ -89,3 +112,14 @@ func kill():
 	dead = true
 	character_mover.freeze()
 	#TODO make sure the character falls to the ground and doesn't freeze in midair
+
+func step_sound():
+	if !character_mover.is_grounded():
+		return
+	if can_play:
+		foot.play()
+		can_play = false
+		step_timer.start()
+
+func finish_step():
+	can_play = true

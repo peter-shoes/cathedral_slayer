@@ -62,7 +62,7 @@ func _ready():
 	
 	#tilemap = TileMap.new()
 	#tilemap.tile_set = autotile
-	# seed(6)
+	#seed(3)
 	tilemap.tile_set = tileset
 	randomize()
 	generate()
@@ -185,7 +185,7 @@ func calc_rooms():
 
 
 func place_path(path):
-	print(path)
+	#print(path)
 
 	for i in range(len(path)):
 		var cur = tilemap.get_cellv(path[i])

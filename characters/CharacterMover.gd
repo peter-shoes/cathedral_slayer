@@ -71,4 +71,7 @@ func slide(is_pressed_slide: bool):
 		drag = 0.01
 	else:
 		drag = float(move_accel) / max_speed
+		
+func is_grounded():
+	return body_to_move.is_on_floor()
 	
