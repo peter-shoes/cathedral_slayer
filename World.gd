@@ -20,6 +20,8 @@ onready var song = load("res://music/dungeon_5.ogg")
 func _ready():
 	var trans = dungeon_grid.map_to_world(dungeon.start_loc.x, dungeon.start_loc.y, dungeon.start_loc.z)
 	player.translation = trans*dungeon_grid.scale.x
+	print("player:")
+	print(player.translation)
 	set_minimap()
 	#play_song()
 
@@ -28,6 +30,7 @@ func set_minimap():
 	mm.target = player
 	# player.camera.add_child(dungeon.tilemap)
 	player.camera.add_child(mm)
+	mm.hide()
 	
 func play_song():
 	music.stream = song

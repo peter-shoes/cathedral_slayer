@@ -9,6 +9,8 @@ signal gibbed
 export var max_health = 100
 var cur_health = 1
 
+onready var marker = load("res://effects/HitMarker.tscn")
+
 var gib_at = -10
 
 func _ready():
@@ -34,6 +36,11 @@ func hurt(damage: int, dir: Vector3, damage_type="normal"):
 		emit_signal("hurt")
 	emit_signal("health_changed", cur_health)
 	print('hurt ', damage, ' current health', cur_health)
+	var mkr = marker.instance()
+	mkr.translation = get_parent().translation
+	mkr.translation.y +=2
+	get_tree().get_root().add_child(mkr)
+	mkr.get_children()[-1].set_emitting(true)
 	
 func heal(amount: int):
 	if cur_health <=0:

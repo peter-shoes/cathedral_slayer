@@ -40,7 +40,6 @@ func _ready():
 	health_manager.connect("dead", self, "set_state_dead")
 	character_mover.init(self)
 	set_state_idle()
-	anim_player.set_blend_time("hurt", "walk", 0.5)
 
 func _process(delta):
 	match cur_state:
@@ -55,19 +54,21 @@ func _process(delta):
 
 func set_state_idle():
 	cur_state = STATES.IDLE
-	anim_player.play("idle")
+	#anim_player.play("idle")
 
 func set_state_chase():
 	cur_state = STATES.CHASE
 	# the second arg here will do some blending
-	anim_player.play("walk", 0.2)
+	anim_player.play("walk_loop", 0.2)
 
 func set_state_attack():
 	cur_state = STATES.ATTACK
+	anim_player.play("attack")
+	anim_player.stop()
 
 func set_state_dead():
 	cur_state = STATES.DEAD
-	anim_player.play("dead")
+	anim_player.play("death")
 	character_mover.freeze()
 	$CollisionShape.disabled = true
 	
@@ -111,13 +112,13 @@ func hurt(damage: int, dir: Vector3):
 		return
 	if cur_state == STATES.IDLE:
 		set_state_chase()
-	anim_player.play("hurt", 0.5) #this doesn't look great
-	anim_player.queue("walk") 
+	#anim_player.play("hurt", 0.5) #this doesn't look great
+	#anim_player.queue("walk") 
 	health_manager.hurt(damage, dir)
 	
 func start_attack():
 	can_attack = false
-	anim_player.play("attack1")
+	anim_player.play("attack")
 	attack_timer.start()
 	
 func finish_attack():

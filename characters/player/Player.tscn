@@ -144,6 +144,8 @@ anims/idle = SubResource( 2 )
 
 [node name="Spell" type="Spatial" parent="Camera/WeaponManager/Weapons"]
 script = ExtResource( 5 )
+damage = 10
+mana = 60
 attack_rate = 0.1
 
 [node name="BulletEmitters" type="Spatial" parent="Camera/WeaponManager/Weapons/Spell"]
@@ -171,6 +173,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.188483 )
 
 [node name="SpotLight" type="SpotLight" parent="Camera"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0335756 )
+light_energy = 0.5
 light_indirect_energy = 0.0
 light_bake_mode = 0
 spot_range = 100.0
@@ -180,6 +183,17 @@ spot_angle = 80.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="Camera/GUI"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = -130.0
+margin_right = 130.0
+margin_bottom = -9.99994
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -206,10 +220,12 @@ margin_left = 30.0
 margin_top = -20.0
 margin_right = 130.0
 rect_rotation = -90.0
-value = 50.0
 texture_under = SubResource( 6 )
 texture_progress = SubResource( 8 )
 nine_patch_stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="HealthBar" type="TextureProgress" parent="Camera/GUI"]
 anchor_top = 1.0

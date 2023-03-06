@@ -1,0 +1,6 @@
+"table" = {
+	"mana" : {
+		"initial_mana": 50,
+		"current_mana": 50,
+	}
+}

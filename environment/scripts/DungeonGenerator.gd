@@ -9,6 +9,7 @@ onready var navmesh = $Navigation/NavigationMeshInstance
 onready var lantern = load("res://environment/Lantern.tscn")
 onready var metlar = load("res://characters/enemies/Metlar.tscn")
 onready var plant = load("res://environment/plants/Plant.tscn")
+onready var dracula = load("res://characters/enemies/enemy_scenes/Dracula.tscn")
 onready var floor_mesh = $FloorMesh
 
 onready var found_start = false
@@ -31,7 +32,8 @@ func generate():
 			var cur_tile = tilemap.get_cellv(loc2)
 			place_tile(cur_tile, loc)
 			if cur_tile != -1:
-				for k in range(5):
+				for k in range(4):
+					pass
 					add_child(plant.instance())
 					place_in_world(get_children()[-1], i, z_level+4, j, true)
 				
@@ -48,14 +50,17 @@ func generate():
 	#var nav = EditorNavigationMeshGenerator.new().NavigationMeshGenerator
 	NavigationMeshGenerator.bake(navmesh, dungeon_grid)
 	# place items in rooms
-	for i in generator.rooms:
-		pass
-		# if i == generator.rooms[0]:
-		# 	navigation.add_child(metlar.instance())
-		# 	var met = navigation.get_children()[-1]
-		# 	trans = dungeon_grid.map_to_world(loc.x, dungeon_grid.cell_size.y * dungeon_grid.scale.y, loc.y)
-		# 	trans.y -= 3
-		# 	met.translation = trans*dungeon_grid.scale.x
+	for i in range(generator.fs.x):
+		for j in range(generator.fs.y):
+			var loc = Vector3(i, z_level, j)
+			var loc2 = Vector2(i,j)
+			var cur_tile = tilemap.get_cellv(loc2)
+			if cur_tile != -1:
+				if randi()%10 == 1:
+					navigation.add_child(dracula.instance())
+					place_in_world(navigation.get_children()[-1], i, z_level, j, true)
+					print("drac:")
+					print(navigation.get_children()[-1].translation)
 		
 	
 func place_tile(type: int, loc: Vector3):

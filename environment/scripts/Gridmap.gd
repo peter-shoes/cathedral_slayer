@@ -74,18 +74,20 @@ func generate():
 		tilemap.clear()
 		# place rooms (vectors)
 		rooms = calc_rooms()
-		# calculate mst of complete graph
-		edges = boruvka.calc_mst_boruvka(rooms)
+		if len(rooms) > 1:
+			# calculate mst of complete graph
+			edges = boruvka.calc_mst_boruvka(rooms)
 	# do internal astar pathing
 	var paths = internal_astar(edges)
 	# place paths
-	for path in paths:
-		# pass
-		# print(path)
-		if len(path):
-			place_path(path)
-	# update the bitmask region if autotiling
-	# tilemap.update_bitmask_region()
+	if len(rooms) > 1:
+		for path in paths:
+			# pass
+			# print(path)
+			if len(path):
+				place_path(path)
+		# update the bitmask region if autotiling
+		# tilemap.update_bitmask_region()
 	return tilemap
 
 
