@@ -8,6 +8,8 @@ onready var stamina_bar = $StaminaBar
 # var a = 2
 # var b = "text"
 var max_mana
+var max_health
+var max_stamina
 
 
 # Called when the node enters the scene tree for the first time.
@@ -20,7 +22,6 @@ func _ready():
 
 func update_mana_pts(p: int):
 	var mana_percent = float(p)/float(max_mana)
-	print(mana_percent)
 	
 	mana_bar.set_value(mana_percent*100)
 
@@ -29,3 +30,13 @@ func update_mana_raw(v: int):
 
 func set_max_mana(v: int):
 	max_mana = v
+	
+func update_stamina_pts(p: int):
+	var stamina_percent = float(p)/float(max_stamina)
+	stamina_bar.set_value(stamina_percent*100)
+
+func update_stamina_raw(v: int):
+	stamina_bar.set_value(v)
+
+func set_max_stamina(v: int):
+	max_stamina = v

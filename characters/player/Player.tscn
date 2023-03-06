@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://characters/player/Player.gd" type="Script" id=1]
 [ext_resource path="res://characters/player/WeaponManager.gd" type="Script" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://characters/CharacterMover.tscn" type="PackedScene" id=8]
 [ext_resource path="res://characters/HealthManager.tscn" type="PackedScene" id=9]
 [ext_resource path="res://weapons/Weapon.gd" type="Script" id=10]
+[ext_resource path="res://characters/player/StaminaManager.gd" type="Script" id=11]
 [ext_resource path="res://weapons/DamageArea.tscn" type="PackedScene" id=15]
 [ext_resource path="res://weapons/raw_assets/DFAxe.fbx" type="PackedScene" id=16]
 
@@ -258,6 +259,9 @@ shape = SubResource( 13 )
 [node name="CharacterMover" parent="." instance=ExtResource( 8 )]
 
 [node name="HealthManager" parent="." instance=ExtResource( 9 )]
+
+[node name="StaminaManager" type="Spatial" parent="."]
+script = ExtResource( 11 )
 
 [node name="Foot" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )

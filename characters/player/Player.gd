@@ -22,6 +22,7 @@ onready var character_mover = $CharacterMover
 onready var health_manager = $HealthManager
 #onready var weapon_manager = $ViewportContainer/Viewport/Camera/WeaponManager
 onready var weapon_manager = $Camera/WeaponManager
+onready var stamina_manager = $StaminaManager
 #onready is used to reference a child of the node that this script extends so the engine will wait until that node is loaded in
 # the $ is used to reference the node, by giving the name of the node
 
@@ -29,6 +30,9 @@ onready var weapon_manager = $Camera/WeaponManager
 onready var foot = $Foot
 var step_timer: Timer
 var can_play = true
+
+var stamina_regen_timer: Timer
+var stamina_regen_amount = 5
 
 var dead = false
 
@@ -46,6 +50,14 @@ func _ready(): #ready is called when the scene is ready
 	step_timer.connect("timeout", self, "finish_step")
 	step_timer.one_shot = true
 	add_child(step_timer)
+	
+	#stamina regen timer
+	stamina_regen_timer = Timer.new()
+	stamina_regen_timer.wait_time = 2
+	stamina_regen_timer.connect("timeout", self, "regen_stamina")
+	stamina_regen_timer.one_shot = true
+	add_child(stamina_regen_timer)
+	
 	
 func _process(_delta):
 	if Input.is_action_just_pressed("exit"):
@@ -71,10 +83,19 @@ func _process(_delta):
 	character_mover.set_move_vec(move_vec)
 	if Input.is_action_just_pressed("jump"):
 		character_mover.jump()
+	if Input.is_action_pressed("sprint") and stamina_manager.current_stamina >= 5:
+		character_mover.set_sprint_true()
+		step_timer.wait_time = 0.25
+		stamina_regen_timer.stop()
+	else:
+		character_mover.set_sprint_false()
+		step_timer.wait_time = 0.5
+		if stamina_regen_timer.is_stopped():
+			stamina_regen_timer.start()
 	# foot stuff
 	if move_vec != Vector3():
 		step_sound()
-	#character_mover.slide(Input.is_action_pressed("slide"))
+	
 		
 	weapon_manager.attack(
 		Input.is_action_just_pressed("attack"),
@@ -120,6 +141,13 @@ func step_sound():
 		foot.play()
 		can_play = false
 		step_timer.start()
+		# this is really bad but it works
+		if character_mover.sprint:
+			stamina_manager.spend_stamina(5)
+			
 
 func finish_step():
 	can_play = true
+	
+func regen_stamina():
+	stamina_manager.add_stamina(stamina_regen_amount)

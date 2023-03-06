@@ -62,9 +62,9 @@ func _ready():
 	
 	#tilemap = TileMap.new()
 	#tilemap.tile_set = autotile
-	#seed(3)
+	seed(11)
 	tilemap.tile_set = tileset
-	randomize()
+	#randomize()
 	generate()
 
 

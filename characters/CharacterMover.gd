@@ -8,17 +8,26 @@ var drag = 0
 export var jump_force = 30
 export var gravity = 60
 
+var sprint_move_accel = 0
+var sprint_max_speed = 0
+
 var pressed_jump = false
 var move_vec : Vector3 #initialize var move_vec as type Vector3
 var velocity : Vector3
 var snap_vec : Vector3 #controls how we stick to the ground when we move around
 export var ignore_rotation = false #this is basically whether you are moving "forward" or North, on move_vec. different for players and AI.
 
+var sprint = false
+var sprint_timer: Timer
+
+
 signal movement_info #signals output information about the node on the signals tab
 
 var frozen = false #when the character dies we want them to stop moving
 
 func _ready():
+	sprint_move_accel = move_accel * 2
+	sprint_max_speed = max_speed * 2
 	drag = float(move_accel) / max_speed #calculates drag for movement
 	
 func init(_body_to_move: KinematicBody): #basically the root node will pass itself to this script
@@ -42,7 +51,14 @@ func _physics_process(delta):
 		return
 	if !ignore_rotation:
 		cur_move_vec = cur_move_vec.rotated(Vector3.UP, body_to_move.rotation.y)
-	velocity += move_accel * cur_move_vec - velocity * Vector3(drag, 0, drag) + gravity * Vector3.DOWN * delta
+	if !sprint:
+		drag = float(move_accel) / max_speed #calculates drag for movement
+		velocity += move_accel * cur_move_vec - velocity * Vector3(drag, 0, drag) + gravity * Vector3.DOWN * delta
+		
+	else:
+		drag = float(sprint_move_accel) / sprint_max_speed #calculates drag for movement
+		velocity += sprint_move_accel * cur_move_vec - velocity * Vector3(drag, 0, drag) + gravity * Vector3.DOWN * delta		
+		
 	#velocity += cur_move_vec - velocity * Vector3(drag*4, 0, drag*4) + gravity * Vector3.DOWN * delta
 	# velocity += the movement accel times the direction we're facing, from which we subtract the velocity times the drag on the horizontal and then for the vertical it's gravity times vector down times the delta
 	velocity = body_to_move.move_and_slide_with_snap(velocity, snap_vec, Vector3.UP) # Check Docs. basically moves the character but allows the character to collide with walls without sticking and also still sticking to the ground. 
@@ -74,4 +90,10 @@ func slide(is_pressed_slide: bool):
 		
 func is_grounded():
 	return body_to_move.is_on_floor()
+	
+func set_sprint_true():
+	sprint = true
+	
+func set_sprint_false():
+	sprint = false
 	
