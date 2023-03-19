@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/tex09.png-5988b53179cfa1e5745c2d23c95d1b88.stex"
+path="res://.import/castle_icon.png-afb662d6296c48a7579fedc0356f5ef8.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://tex09.png"
-dest_files=[ "res://.import/tex09.png-5988b53179cfa1e5745c2d23c95d1b88.stex" ]
+source_file="res://castle_icon.png"
+dest_files=[ "res://.import/castle_icon.png-afb662d6296c48a7579fedc0356f5ef8.stex" ]
 
 [params]
 
@@ -19,8 +19,8 @@ compress/lossy_quality=0.7
 compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
-flags/repeat=1
-flags/filter=false
+flags/repeat=0
+flags/filter=true
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2

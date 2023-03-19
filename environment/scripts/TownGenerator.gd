@@ -1,8 +1,6 @@
 extends Spatial
 
 onready var dungeon_grid = $DungeonGrid
-onready var dungeon_grid_walls = $DungeonGrid2
-onready var dungeon_grid_ceil = $DungeonGrid3
 onready var generator = $Gridmap
 onready var navigation = $Navigation
 onready var navmesh = $Navigation/NavigationMeshInstance
@@ -31,12 +29,35 @@ func generate():
 			var loc2 = Vector2(i,j)
 			var cur_tile = tilemap.get_cellv(loc2)
 			place_tile(cur_tile, loc)
-			if cur_tile != -1:
-				for k in range(4):
-					pass
-					add_child(plant.instance())
-					place_in_world(get_children()[-1], i, z_level+4, j, true)
-				
+			if cur_tile == -1:
+				start_loc = loc
+				place_tile(generator.tn("floor"), loc)
+	# This is a bad way to do this, but here we stack rooms
+	for i in generator.rooms:
+		var floors = (randi() % 2) + 2
+		for x in range(i.corner.x + i.size.x):
+			for y in range(i.corner.y + i.size.y):
+				var cur = tilemap.get_cellv(Vector2(x,y))
+				for j in range(1, floors-1):
+					if cur == generator.tn("wall"):
+						dungeon_grid.set_cell_item(x, j, y, tn("wall1"), 
+						dungeon_grid.get_cell_item_orientation(x,0,y))
+					elif cur == generator.tn("corner"):
+						dungeon_grid.set_cell_item(x, j, y, tn("corner0"),
+						dungeon_grid.get_cell_item_orientation(x,0,y))
+					else:
+						print(cur)
+				# if cur == generator.tn("wall"):
+				# 	dungeon_grid.set_cell_item(x, floors, y, tn("wall2"),
+				# 	dungeon_grid.get_cell_item_orientation(x,0,y))
+				# elif cur == generator.tn("corner"):
+				# 	dungeon_grid.set_cell_item(x, floors, y, tn("corner2"),
+				# 	dungeon_grid.get_cell_item_orientation(x,0,y))
+				# elif cur == generator.tn("floor"):
+				# 	dungeon_grid.set_cell_item(x, floors, y, tn("ceil"),
+				# 	dungeon_grid.get_cell_item_orientation(x,0,y))
+				# else:
+				# 	print("missing")
 
 	# var used_rect = generator.tilemap.get_used_rect()
 
@@ -55,25 +76,25 @@ func generate():
 	navmesh.navmesh = _navmesh
 	
 	# place items in rooms
-	var valid_locs = []
-	for i in range(generator.fs.x):
-		for j in range(generator.fs.y):
-			var loc = Vector3(i, z_level, j)
-			var loc2 = Vector2(i,j)
-			var cur_tile = tilemap.get_cellv(loc2)
-			if cur_tile != -1:
-				if randi()%8 == 1:
-					if !len(valid_locs):
-						valid_locs.append(loc)
-					else:
-						var drac = dracula.instance()
-						navigation.add_child(drac)
-						place_in_world(drac, i, z_level, j, false)
-						var walk_loc = valid_locs[randi()%len(valid_locs)]
-						var world_loc = dungeon_grid.map_to_world(walk_loc.x, walk_loc.y, walk_loc.z) * dungeon_grid.scale.x
-						drac.set_walk_pos(world_loc)
-				else:
-					valid_locs.append(loc)
+	# var valid_locs = []
+	# for i in range(generator.fs.x):
+	# 	for j in range(generator.fs.y):
+	# 		var loc = Vector3(i, z_level, j)
+	# 		var loc2 = Vector2(i,j)
+	# 		var cur_tile = tilemap.get_cellv(loc2)
+	# 		if cur_tile != -1:
+	# 			if randi()%8 == 1:
+	# 				if !len(valid_locs):
+	# 					valid_locs.append(loc)
+	# 				else:
+	# 					var drac = dracula.instance()
+	# 					navigation.add_child(drac)
+	# 					place_in_world(drac, i, z_level, j, false)
+	# 					var walk_loc = valid_locs[randi()%len(valid_locs)]
+	# 					var world_loc = dungeon_grid.map_to_world(walk_loc.x, walk_loc.y, walk_loc.z) * dungeon_grid.scale.x
+	# 					drac.set_walk_pos(world_loc)
+	# 			else:
+	# 				valid_locs.append(loc)
 		
 	
 func place_tile(type: int, loc: Vector3):
@@ -87,64 +108,17 @@ func place_tile(type: int, loc: Vector3):
 	
 	#floor
 	if type == generator.tn("floor"):
-		tile = tn("floor_cistern_double2")
+		tile = tn("floor")
 	
 	# # walls
 	elif type == generator.tn("wall"):
-		var o = get_cell_rotation(xf, yf, tp, tn("wall2"))
-		if o == 6 or o == 12:
-			tile = tn("wall_cistern2")
-			# tile = -1
-		else:
-			tile = tn("wall2")
-			# tile = -1
-
-	#doors
-	elif type == generator.tn("door"):
-		var o = get_cell_rotation(xf, yf, tp, tn("wall2"))
-		if o == 6 or o == 12:
-			tile = tn("wall_cistern_door2")
-		else:
-			tile = tn("wall_door2")
+		var o = get_cell_rotation(xf, yf, tp, tn("wall0"))
+		tile = tn("wall0")
 
 	#corners
 	elif type == generator.tn("corner"):
-		tile = tn("corner2")
-
-	# corner door l
-	elif type == generator.tn("corner_door_l"):
-		if ((tp and xf and yf) or
-			(!tp and xf and !yf) or
-			(tp and !xf and !yf)
-			):
-			tile = tn("corner_door_r2")
-		else:
-			tile = tn("corner_door_l2")
-			# tile = -1
+		tile = tn("corner0")
 		# orientation = 16
-
-	# corner door
-	elif type == generator.tn("corner_door"):
-		tile = tn("corner_door2")
-		tp = false
-		# orientation = 16
-
-	#halls
-	elif type == generator.tn("hall"):
-		tile = tn("hall_double2")
-		# orientation = 0
-
-	#hall corners
-	elif type == generator.tn("hall_corner"):
-		tile = tn("hall_corner2")
-
-	#hall tris
-	elif type == generator.tn("hall_tri"):
-		tile = tn("hall_tri2")
-	
-	#hall quads
-	elif type == generator.tn("hall_quad"):
-		tile = tn("hall2")
 	
 	else:
 		tile = -1
@@ -164,81 +138,37 @@ func place_tile(type: int, loc: Vector3):
 func get_cell_rotation(xf, yf, tp, tile):
 	# ini 0: n, 1: s, 2: e, 3: w
 	# 6, 12, 17, 21
-	var orientation = 6
+	var orientation = 0
 	var replacement_mesh = null
 	
 	if (
-		tile == tn("corner2") or
-		tile == tn("corner_door2") 
+		tile == tn("corner0") or 
+		tile == tn("corner1") or 
+		tile == tn("corner2")
 	):
 		if (!xf and !yf):
-			orientation = 21
+			orientation = 22
 		if (!xf and yf):
-			orientation = 6
+			orientation = 10
 		if (xf and yf):
-			orientation = 17
+			orientation = 16
 		if (xf and !yf):
-			orientation = 12
-	
-	if (
-		tile == tn("corner_door_l2") or
-		tile == tn("corner_door_r2")
-	):
-		if (!tp):
-			if (!xf and !yf):
-				orientation = 21
-			if (!xf and yf):
-				orientation = 6
-			if (xf and yf):
-				orientation = 17
-			if (xf and !yf):
-				orientation = 12
-		else:
-			if (!xf and !yf):
-				orientation = 17
-			if (!xf and yf):
-				orientation = 12
-			if (xf and yf):
-				orientation = 21
-			if (xf and !yf):
-				orientation = 6
-
-	elif (
-		tile == tn("hall_corner2")
-	):
-		if (!xf and !yf):
-			orientation = 21
-		if (xf and !yf):
-			orientation = 12
-		if (!xf and yf):
-			orientation = 6
-		if (xf and yf):
-			orientation = 17
+			orientation = 0
 	
 	elif (
-		tile == tn("wall2") or
-		tile == tn("wall_door2") or
-		tile == tn("wall_cistern2") or
-		tile == tn("wall_cistern_door2")
+		tile == tn("wall0") or
+		tile == tn("wall1") or
+		tile == tn("wall2")
 	):
 		if (!xf and !yf and !tp):
-			orientation = 12
+			orientation = 22
 		if (!xf and !yf and tp):
-			orientation = 17
+			orientation = 0
 		if (xf and yf and tp):
-			orientation = 21
+			orientation = 10
 		if (!xf and yf and !tp):
-			orientation = 6
+			orientation = 16
 
-	elif (
-		tile == tn("hall_double2")
-	):
-		if tp:
-			orientation = 6
-		else:
-			orientation = 17
-	
-	
 	return orientation
 	
 func tn(n: String):

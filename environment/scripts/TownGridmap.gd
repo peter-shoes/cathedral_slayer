@@ -69,25 +69,9 @@ func _ready():
 
 
 func generate():
-	var edges = false
-	while !edges:
-		tilemap.clear()
+	tilemap.clear()
 		# place rooms (vectors)
-		rooms = calc_rooms()
-		if len(rooms) > 1:
-			# calculate mst of complete graph
-			edges = boruvka.calc_mst_boruvka(rooms)
-	# do internal astar pathing
-	var paths = internal_astar(edges)
-	# place paths
-	if len(rooms) > 1:
-		for path in paths:
-			# pass
-			# print(path)
-			if len(path):
-				place_path(path)
-		# update the bitmask region if autotiling
-		# tilemap.update_bitmask_region()
+	rooms = calc_rooms()
 	return tilemap
 
 

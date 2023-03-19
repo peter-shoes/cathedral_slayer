@@ -3,6 +3,7 @@ extends KinematicBody
 onready var character_mover = $CharacterMover
 onready var anim_player = $Graphics/AnimationPlayer
 onready var health_manager = $HealthManager
+onready var aimer = $AimAtObject
 #no parent in this scene, but in the main scene it's parent is the nav mngr
 #for that reason, beasts must always be a child of the nav manager or node
 onready var nav : Navigation = get_parent()
@@ -17,14 +18,20 @@ export var sight_angle = 45.0
 
 var turn_speed = 360.0
 
-export var attack_range = 3.0
+export var attack_range = 2.0
 export var attack_rate = 1.0
 var attack_timer: Timer
 var can_attack = true
 
+# random walk vars
+var initial_pos: Vector3
+var walk_pos: Vector3
+
 signal attack
 
 func _ready():
+	randomize()
+
 	attack_timer = Timer.new()
 	attack_timer.wait_time = attack_rate
 	attack_timer.connect("timeout", self, "finish_attack")
@@ -59,7 +66,7 @@ func set_state_idle():
 func set_state_chase():
 	cur_state = STATES.CHASE
 	# the second arg here will do some blending
-	anim_player.play("walk_loop", 0.2)
+	anim_player.play("walk_loop")
 
 func set_state_attack():
 	cur_state = STATES.ATTACK
@@ -75,6 +82,8 @@ func set_state_dead():
 func process_state_idle(delta):
 	if can_see_player():
 		set_state_chase()
+	else:
+		random_walk(delta)
 	
 func process_state_chase(delta):
 	if within_dis_of_player(attack_range) and has_los_player():
@@ -100,13 +109,17 @@ func process_state_attack(delta):
 	character_mover.set_move_vec(Vector3.ZERO)
 	face_dir(global_transform.origin.direction_to(player.global_transform.origin), delta)
 	if can_attack:
-		start_attack()
-	if !within_dis_of_player(attack_range) or !can_see_player():
-		set_state_chase()
+		
+		if !within_dis_of_player(attack_range) or !can_see_player():
+			set_state_chase()
+
+		else:
+			start_attack()
 	
 func process_state_dead(delta):
+	#queue_free()
 	pass
-	
+
 func hurt(damage: int, dir: Vector3):
 	if cur_state == STATES.DEAD:
 		return
@@ -120,6 +133,10 @@ func start_attack():
 	can_attack = false
 	anim_player.play("attack")
 	attack_timer.start()
+	aimer.aim_at_pos(player.global_transform.origin)
+
+func emit_attack_signal():
+	emit_signal("attack")
 	
 func finish_attack():
 	can_attack = true
@@ -162,3 +179,42 @@ func alert(check_los=true):
 
 func within_dis_of_player(dis: float):
 	return global_transform.origin.distance_to(player.global_transform.origin) < dis
+	
+
+func random_walk(delta):
+	if !initial_pos:
+		initial_pos = global_transform.origin
+	var our_pos = global_transform.origin
+	var goal_pos = null
+	if our_pos == initial_pos:
+		goal_pos = walk_pos
+	elif our_pos == walk_pos:
+		goal_pos = initial_pos
+	else:
+		return
+
+	
+		
+	# get_simple_path gets local positions
+	# in order for this to work globally, our nav mesh must be at 000
+	# that way, local and global pos is the same
+	path = nav.get_simple_path(our_pos, goal_pos)
+	
+	var end_pos = goal_pos
+	
+	if path.size() > 1:
+		end_pos = path[1]
+	
+	#vector pointing from our pos to goal pos
+	var dir = end_pos - our_pos
+	#make this a 2d vector
+	dir.y = 0
+	character_mover.set_move_vec(dir)
+	face_dir(dir, delta)
+	anim_player.play("walk_loop")
+	
+func set_walk_pos(v: Vector3):
+	walk_pos = v
+
+func set_initial_pos(v: Vector3):
+	initial_pos = v

@@ -5,6 +5,7 @@ onready var bullet_emitters_base : Spatial = $BulletEmitters
 onready var bullet_emitters = $BulletEmitters.get_children()
 onready var spell_spawner = $BulletEmitters/SpellSpawner
 onready var gui = get_parent().get_parent().get_parent().get_node("GUI")
+onready var mana_manager = get_parent().get_parent().get_parent().get_parent().get_node("ManaManager")
 
 export var automatic = false #whether or not the weapon is automatic
 
@@ -12,8 +13,6 @@ var fire_point : Spatial
 var bodies_to_exclude : Array = []
 
 export var damage = 5 #THIS MAKES EVERY BULLET DO THE SAME AMOUNT OF DAMAGE ; move this export var to the damage var in HitScanBulletEmitter to change
-export var mana = 30 #initial ammo; boomer shooters don't have reloading or clips, just a well of ammo
-var max_mana: int
 
 export var attack_rate = 0.2 #i believe this is in seconds
 var attack_timer : Timer 
@@ -31,7 +30,6 @@ func _ready():
 	add_child(attack_timer)
 	
 func init(_fire_point: Spatial, _bodies_to_exclude: Array):
-	gui.set_max_mana(mana)
 	fire_point = _fire_point
 	bodies_to_exclude = _bodies_to_exclude
 	for bullet_emitter in bullet_emitters:
@@ -44,17 +42,10 @@ func attack(attack_input_just_pressed: bool, attack_input_held: bool):
 	if automatic and !attack_input_held:
 		return #if it's an automatic weapon and we're not holding attack, do nothing
 	if !automatic and !attack_input_just_pressed:
-		return 
-		
-	if mana == 0:
-		if attack_input_just_pressed:
-			emit_signal("out_of_mana")
 		return
-	
-	if mana > 0:
-		mana -= spell_spawner.get_current_mana_cost()
-		gui.update_mana_pts(mana)
-	
+	if !mana_manager.spend_mana(spell_spawner.get_current_mana_cost()):
+		return
+		
 	var start_transform = bullet_emitters_base.global_transform
 	bullet_emitters_base.global_transform = fire_point.global_transform
 	for bullet_emitter in bullet_emitters:
@@ -87,9 +78,3 @@ func play_sound():
 		sound_to_play += 1
 	else:
 		sound_to_play = 0
-		
-func get_current_mana():
-	return mana
-
-func get_max_mana():
-	return max_mana

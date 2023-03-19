@@ -8,7 +8,6 @@ var slots_unlocked = {
 onready var weapons = $Weapons.get_children()
 onready var alert_area_hearing = $AlertAreaHearing
 onready var alert_area_los = $AlertAreaLos
-var gascloud = preload("res://weapons/GasCloud.tscn")
 
 var cur_slot = 0
 var cur_weapon = null
@@ -36,17 +35,7 @@ func attack(attack_input_just_pressed: bool, attack_input_held: bool): #from wea
 		cur_weapon.attack(attack_input_just_pressed, attack_input_held)
 
 func cast(attack_input_just_pressed: bool, attack_input_held: bool):
-	weapons[-1].attack(attack_input_just_pressed, attack_input_held)
-	
-func drop_gas(input_just_pressed: bool):
-	# there should be some check here to see if you have any gas bombs
-	if input_just_pressed:
-		var gas_inst = gascloud.instance()
-		get_tree().get_root().add_child(gas_inst)
-		gas_inst.global_transform = global_transform
-		gas_inst.explode()
-	
-	
+	weapons[-1].attack(attack_input_just_pressed, attack_input_held)	
 	
 func switch_to_next_weapon():
 	cur_slot = (cur_slot + 1) % slots_unlocked.size()

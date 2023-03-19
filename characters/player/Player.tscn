@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://characters/player/Player.gd" type="Script" id=1]
 [ext_resource path="res://characters/player/WeaponManager.gd" type="Script" id=2]
@@ -8,9 +8,12 @@
 [ext_resource path="res://weapons/raw_assets/eyesymbol.png" type="Texture" id=6]
 [ext_resource path="res://sounds/foot2.wav" type="AudioStream" id=7]
 [ext_resource path="res://characters/CharacterMover.tscn" type="PackedScene" id=8]
-[ext_resource path="res://characters/HealthManager.tscn" type="PackedScene" id=9]
+[ext_resource path="res://characters/HealthManager.gd" type="Script" id=9]
 [ext_resource path="res://weapons/Weapon.gd" type="Script" id=10]
 [ext_resource path="res://characters/player/StaminaManager.gd" type="Script" id=11]
+[ext_resource path="res://characters/player/ManaManager.gd" type="Script" id=12]
+[ext_resource path="res://effects/raw_assets/circle32.png" type="Texture" id=13]
+[ext_resource path="res://effects/raw_assets/hurtscreen.png" type="Texture" id=14]
 [ext_resource path="res://weapons/DamageArea.tscn" type="PackedScene" id=15]
 [ext_resource path="res://weapons/raw_assets/DFAxe.fbx" type="PackedScene" id=16]
 
@@ -146,7 +149,6 @@ anims/idle = SubResource( 2 )
 [node name="Spell" type="Spatial" parent="Camera/WeaponManager/Weapons"]
 script = ExtResource( 5 )
 damage = 10
-mana = 60
 attack_rate = 0.1
 
 [node name="BulletEmitters" type="Spatial" parent="Camera/WeaponManager/Weapons/Spell"]
@@ -187,6 +189,7 @@ script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+hurt_start_color = Color( 1, 1, 1, 0.498039 )
 
 [node name="ColorRect" type="ColorRect" parent="Camera/GUI"]
 anchor_top = 1.0
@@ -252,16 +255,48 @@ texture_under = SubResource( 6 )
 texture_progress = SubResource( 12 )
 nine_patch_stretch = true
 
+[node name="AbilityMenu" type="Control" parent="Camera/GUI"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="TextureRect" type="TextureRect" parent="Camera/GUI/AbilityMenu"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -200.0
+margin_top = -200.0
+margin_right = 200.0
+margin_bottom = 200.0
+texture = ExtResource( 13 )
+expand = true
+
+[node name="HurtEffect" type="TextureRect" parent="Camera/GUI"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 1024.0
+margin_bottom = 600.0
+rect_scale = Vector2( 0.5, 0.5 )
+size_flags_horizontal = 15
+size_flags_vertical = 15
+size_flags_stretch_ratio = 6.75
+texture = ExtResource( 14 )
+expand = true
+
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 1, 0 )
 shape = SubResource( 13 )
 
 [node name="CharacterMover" parent="." instance=ExtResource( 8 )]
 
-[node name="HealthManager" parent="." instance=ExtResource( 9 )]
+[node name="HealthManager" type="Spatial" parent="."]
+script = ExtResource( 9 )
 
 [node name="StaminaManager" type="Spatial" parent="."]
 script = ExtResource( 11 )
 
 [node name="Foot" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )
+
+[node name="ManaManager" type="Spatial" parent="."]
+script = ExtResource( 12 )

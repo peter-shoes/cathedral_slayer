@@ -21,3 +21,6 @@ func fire():
 
 func get_current_mana_cost():
 	return current_mana_cost
+	
+func set_current_mana_cost(p: int):
+	current_mana_cost = p

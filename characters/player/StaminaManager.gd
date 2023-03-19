@@ -14,12 +14,18 @@ func _ready():
 func spend_stamina(p: int):
 	if current_stamina - p >= 0:
 		current_stamina -= p
-	gui.update_stamina_pts(current_stamina)
+		gui.update_stamina_pts(current_stamina)
+		return true
+	else:
+		return false
 	
 func add_stamina(p: int):
 	if current_stamina + p <= max_stamina:
 		current_stamina += p
-	gui.update_stamina_pts(current_stamina)
+		gui.update_stamina_pts(current_stamina)
+		return true
+	else:
+		return false
 		
 
 

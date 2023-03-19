@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/CROSSHATCHING.png-93efe1553ed56da8cb60683f700bb1b7.stex"
+path="res://.import/ikeagreen.png-9963cfde07aed13de2065354a34451ac.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://CROSSHATCHING.png"
-dest_files=[ "res://.import/CROSSHATCHING.png-93efe1553ed56da8cb60683f700bb1b7.stex" ]
+source_file="res://palattes/ikeagreen.png"
+dest_files=[ "res://.import/ikeagreen.png-9963cfde07aed13de2065354a34451ac.stex" ]
 
 [params]
 
@@ -19,8 +19,8 @@ compress/lossy_quality=0.7
 compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
-flags/repeat=1
-flags/filter=false
+flags/repeat=0
+flags/filter=true
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2

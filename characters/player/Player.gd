@@ -20,6 +20,7 @@ export var mouse_sens = 0.5
 onready var camera = $Camera
 onready var character_mover = $CharacterMover
 onready var health_manager = $HealthManager
+onready var gui = $Camera/GUI
 #onready var weapon_manager = $ViewportContainer/Viewport/Camera/WeaponManager
 onready var weapon_manager = $Camera/WeaponManager
 onready var stamina_manager = $StaminaManager
@@ -92,10 +93,15 @@ func _process(_delta):
 		step_timer.wait_time = 0.5
 		if stamina_regen_timer.is_stopped():
 			stamina_regen_timer.start()
+	
 	# foot stuff
 	if move_vec != Vector3():
 		step_sound()
-	
+		
+	if Input.is_action_just_pressed("ability_menu"):
+		gui.show_ability_menu()
+	if Input.is_action_just_released("ability_menu"):
+		gui.hide_ability_menu()
 		
 	weapon_manager.attack(
 		Input.is_action_just_pressed("attack"),
