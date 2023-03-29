@@ -17,6 +17,8 @@ height = 1.82753
 [sub_resource type="BoxShape" id=2]
 
 [node name="Dracula" type="KinematicBody"]
+collision_layer = 2
+collision_mask = 3
 script = ExtResource( 2 )
 
 [node name="CharacterMover" parent="." instance=ExtResource( 4 )]
@@ -25,9 +27,10 @@ max_speed = 6
 ignore_rotation = true
 
 [node name="HealthManager" parent="." instance=ExtResource( 3 )]
+max_health = 40
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 1.5, 0 )
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 1.52824, 0 )
 shape = SubResource( 1 )
 
 [node name="Graphics" parent="." instance=ExtResource( 1 )]
@@ -50,7 +53,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0 )
 script = ExtResource( 5 )
 
 [node name="DamageArea" type="Area" parent="AimAtObject"]
-transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0.93715 )
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 1.64918 )
 collision_layer = 0
 collision_mask = 2
 script = ExtResource( 6 )

@@ -1,0 +1,6 @@
+[gd_resource type="NavigationMesh" format=2]
+
+[resource]
+cell/size = 0.75
+agent/radius = 0.3
+agent/max_slope = 5.0

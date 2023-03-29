@@ -157,3 +157,7 @@ func finish_step():
 	
 func regen_stamina():
 	stamina_manager.add_stamina(stamina_regen_amount)
+
+
+func _on_HealthManager_dead():
+	get_tree().change_scene("res://UI/DeathScreen.tscn")

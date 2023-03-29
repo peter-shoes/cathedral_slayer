@@ -2,7 +2,11 @@ extends Area
 
 
 var bodies_to_exclude : Array = []
-export var damage = 5
+export var damage = 20
+onready var slf = get_parent().get_parent()
+
+func _ready():
+	bodies_to_exclude.append(slf)
 
 func fire():
 	for body in get_overlapping_bodies():

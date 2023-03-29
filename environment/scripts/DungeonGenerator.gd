@@ -1,13 +1,11 @@
 extends Spatial
 
-onready var dungeon_grid = $DungeonGrid
-onready var dungeon_grid_walls = $DungeonGrid2
-onready var dungeon_grid_ceil = $DungeonGrid3
+onready var dungeon_grid = $Navigation/NavigationMeshInstance/DungeonGrid
 onready var generator = $Gridmap
 onready var navigation = $Navigation
 onready var navmesh = $Navigation/NavigationMeshInstance
 onready var lantern = load("res://environment/Lantern.tscn")
-onready var metlar = load("res://characters/enemies/Metlar.tscn")
+onready var metlar = load("res://characters/enemies/enemy_scenes/Metlar.tscn")
 onready var plant = load("res://environment/plants/Plant.tscn")
 onready var dracula = load("res://characters/enemies/enemy_scenes/Dracula.tscn")
 onready var floor_mesh = $FloorMesh
@@ -39,7 +37,14 @@ func generate():
 				
 
 	# var used_rect = generator.tilemap.get_used_rect()
-
+	#var gen = NavigationMeshGenerator
+	#var new_navmesh = NavigationMesh.new()
+	#new_navmesh.set_agent_radius(0.3)
+	#new_navmesh.set_agent_max_slope(5)
+	#new_navmesh.set_cell_size(0.75)
+	#NavigationMeshGenerator(new_navmesh, get_tree().get_root())
+	#gen.bake(new_navmesh, dungeon_grid)
+	#navmesh.set_navigation_mesh(new_navmesh)
 	# floor_mesh.scale.x = used_rect.size.x * dungeon_grid.cell_size.x * dungeon_grid.scale.x
 	# floor_mesh.scale.y = used_rect.size.y * dungeon_grid.cell_size.y * dungeon_grid.scale.y
 	# var loc_map = dungeon_grid.map_to_world(used_rect.position.x, used_rect.position.y, 1)
@@ -48,11 +53,11 @@ func generate():
 	# floor_mesh.translation.y += 1.01
 	# go navmesh
 	#var nav = EditorNavigationMeshGenerator.new().NavigationMeshGenerator
-	var _navmesh: NavigationMesh = NavigationMesh.new()
-	_navmesh.set_agent_radius(16)
-	NavigationMeshGenerator.bake(_navmesh, self)
-	navmesh.navmesh = null
-	navmesh.navmesh = _navmesh
+	# var _navmesh: NavigationMesh = NavigationMesh.new()
+	#_navmesh.set_agent_radius(16)
+	# NavigationMeshGenerator.bake(_navmesh, self)
+	#navmesh.navmesh = null
+	# navmesh.navmesh = _navmesh
 	
 	# place items in rooms
 	var valid_locs = []

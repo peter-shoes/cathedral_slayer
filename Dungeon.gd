@@ -3,7 +3,7 @@ extends Spatial
 #onready var dungeon = $DungeonGenerator
 onready var dungeon = $ViewportContainer/Viewport/DungeonGenerator
 #onready var dungeon_grid = $DungeonGenerator/DungeonGrid
-onready var dungeon_grid = $ViewportContainer/Viewport/DungeonGenerator/DungeonGrid
+onready var dungeon_grid = $ViewportContainer/Viewport/DungeonGenerator/Navigation/NavigationMeshInstance/DungeonGrid
 #onready var player = $Player
 onready var player = $ViewportContainer/Viewport/Player
 onready var minimap = load("res://environment/Minimap.tscn")

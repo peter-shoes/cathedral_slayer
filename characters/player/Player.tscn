@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://characters/player/Player.gd" type="Script" id=1]
 [ext_resource path="res://characters/player/WeaponManager.gd" type="Script" id=2]
@@ -14,11 +14,12 @@
 [ext_resource path="res://characters/player/ManaManager.gd" type="Script" id=12]
 [ext_resource path="res://effects/raw_assets/circle32.png" type="Texture" id=13]
 [ext_resource path="res://effects/raw_assets/hurtscreen.png" type="Texture" id=14]
-[ext_resource path="res://weapons/DamageArea.tscn" type="PackedScene" id=15]
+[ext_resource path="res://weapons/DamageArea.gd" type="Script" id=15]
 [ext_resource path="res://weapons/raw_assets/DFAxe.fbx" type="PackedScene" id=16]
 
-[sub_resource type="Animation" id=1]
-resource_name = "attack"
+[sub_resource type="BoxShape" id=1]
+
+[sub_resource type="Animation" id=2]
 length = 0.4
 step = 0.05
 tracks/0/type = "value"
@@ -46,8 +47,7 @@ tracks/1/keys = {
 "values": [ Vector3( 0, 0, 0 ), Vector3( -25.5808, 70.769, 8.56581 ), Vector3( 0, 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=2]
-resource_name = "idle"
+[sub_resource type="Animation" id=3]
 tracks/0/type = "value"
 tracks/0/path = NodePath("Graphics:translation")
 tracks/0/interp = 1
@@ -73,41 +73,41 @@ tracks/1/keys = {
 "values": [ Vector3( 0, 0, 0 ) ]
 }
 
-[sub_resource type="SphereShape" id=3]
+[sub_resource type="SphereShape" id=4]
 radius = 15.0
 
-[sub_resource type="SphereShape" id=4]
+[sub_resource type="SphereShape" id=5]
 radius = 50.0
 
-[sub_resource type="Gradient" id=5]
+[sub_resource type="Gradient" id=6]
 offsets = PoolRealArray( 0 )
 colors = PoolColorArray( 0, 0, 0, 1 )
 
-[sub_resource type="GradientTexture" id=6]
-gradient = SubResource( 5 )
+[sub_resource type="GradientTexture" id=7]
+gradient = SubResource( 6 )
 
-[sub_resource type="Gradient" id=7]
+[sub_resource type="Gradient" id=8]
 offsets = PoolRealArray( 0 )
 colors = PoolColorArray( 0.204641, 0.422122, 1, 1 )
 
-[sub_resource type="GradientTexture" id=8]
-gradient = SubResource( 7 )
+[sub_resource type="GradientTexture" id=9]
+gradient = SubResource( 8 )
 
-[sub_resource type="Gradient" id=9]
+[sub_resource type="Gradient" id=10]
 offsets = PoolRealArray( 0 )
 colors = PoolColorArray( 1, 0.151899, 0.37055, 1 )
 
-[sub_resource type="GradientTexture" id=10]
-gradient = SubResource( 9 )
+[sub_resource type="GradientTexture" id=11]
+gradient = SubResource( 10 )
 
-[sub_resource type="Gradient" id=11]
+[sub_resource type="Gradient" id=12]
 offsets = PoolRealArray( 0 )
 colors = PoolColorArray( 0.252893, 0.621094, 0.293165, 1 )
 
-[sub_resource type="GradientTexture" id=12]
-gradient = SubResource( 11 )
+[sub_resource type="GradientTexture" id=13]
+gradient = SubResource( 12 )
 
-[sub_resource type="CapsuleShape" id=13]
+[sub_resource type="CapsuleShape" id=14]
 radius = 0.5
 
 [node name="Player" type="KinematicBody" groups=[
@@ -129,13 +129,21 @@ script = ExtResource( 2 )
 [node name="Machete" type="Spatial" parent="Camera/WeaponManager/Weapons"]
 transform = Transform( 0.212393, 0, 0, 0, 0.212393, 0, 0, 0, 0.212393, 0.26186, 0.0190381, 0.415004 )
 script = ExtResource( 10 )
+damage = 20
 ammo = -1
 
 [node name="BulletEmitters" type="Spatial" parent="Camera/WeaponManager/Weapons/Machete"]
 transform = Transform( 4.70825, 0, 0, 0, 4.70825, 0, 0, 0, 4.70825, -1.2329, -7.17915, 1.30001 )
 
-[node name="DamageArea" parent="Camera/WeaponManager/Weapons/Machete/BulletEmitters" instance=ExtResource( 15 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.77003, -0.58705 )
+[node name="DamageArea" type="Area" parent="Camera/WeaponManager/Weapons/Machete/BulletEmitters"]
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 1.77003, -1.38875 )
+collision_layer = 0
+collision_mask = 2
+script = ExtResource( 15 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Camera/WeaponManager/Weapons/Machete/BulletEmitters/DamageArea"]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
+shape = SubResource( 1 )
 
 [node name="Graphics" type="Spatial" parent="Camera/WeaponManager/Weapons/Machete"]
 
@@ -143,8 +151,8 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.77003, -0.58705 )
 transform = Transform( -0.123172, 0.407256, -0.262623, 0.00251573, 0.271508, 0.419854, 0.484584, 0.102107, -0.0689332, -1.90156, -0.454681, -0.288673 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Camera/WeaponManager/Weapons/Machete"]
-anims/attack = SubResource( 1 )
-anims/idle = SubResource( 2 )
+anims/attack = SubResource( 2 )
+anims/idle = SubResource( 3 )
 
 [node name="Spell" type="Spatial" parent="Camera/WeaponManager/Weapons"]
 script = ExtResource( 5 )
@@ -162,14 +170,14 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape" type="CollisionShape" parent="Camera/WeaponManager/AlertAreaHearing"]
-shape = SubResource( 3 )
+shape = SubResource( 4 )
 
 [node name="AlertAreaLos" type="Area" parent="Camera/WeaponManager"]
 collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape" type="CollisionShape" parent="Camera/WeaponManager/AlertAreaLos"]
-shape = SubResource( 4 )
+shape = SubResource( 5 )
 
 [node name="FirePoint" type="Spatial" parent="Camera"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.188483 )
@@ -224,8 +232,8 @@ margin_left = 30.0
 margin_top = -20.0
 margin_right = 130.0
 rect_rotation = -90.0
-texture_under = SubResource( 6 )
-texture_progress = SubResource( 8 )
+texture_under = SubResource( 7 )
+texture_progress = SubResource( 9 )
 nine_patch_stretch = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -239,8 +247,8 @@ margin_top = -20.0
 margin_right = 160.0
 rect_rotation = -90.0
 value = 50.0
-texture_under = SubResource( 6 )
-texture_progress = SubResource( 10 )
+texture_under = SubResource( 7 )
+texture_progress = SubResource( 11 )
 nine_patch_stretch = true
 
 [node name="StaminaBar" type="TextureProgress" parent="Camera/GUI"]
@@ -251,8 +259,8 @@ margin_top = -20.0
 margin_right = 190.0
 rect_rotation = -90.0
 value = 50.0
-texture_under = SubResource( 6 )
-texture_progress = SubResource( 12 )
+texture_under = SubResource( 7 )
+texture_progress = SubResource( 13 )
 nine_patch_stretch = true
 
 [node name="AbilityMenu" type="Control" parent="Camera/GUI"]
@@ -285,7 +293,7 @@ expand = true
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 1, 0 )
-shape = SubResource( 13 )
+shape = SubResource( 14 )
 
 [node name="CharacterMover" parent="." instance=ExtResource( 8 )]
 
@@ -300,3 +308,4 @@ stream = ExtResource( 7 )
 
 [node name="ManaManager" type="Spatial" parent="."]
 script = ExtResource( 12 )
+[connection signal="dead" from="HealthManager" to="." method="_on_HealthManager_dead"]
